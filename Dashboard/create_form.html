@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Groupie</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a90e2 0%, #87ceeb 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header styles (same as other pages) */
+        .header {
+            background: rgba(240, 240, 240, 0.95);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            color: #4a90e2;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            margin-left: auto;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        /* Main container */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .required {
+            color: #dc4c64;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Number input special styling */
+        .number-input-container {
+            position: relative;
+        }
+
+        .number-input {
+            padding-right: 3rem;
+        }
+
+        .number-buttons {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .number-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .number-btn:first-child {
+            border-radius: 4px 4px 0 0;
+        }
+
+        .number-btn:last-child {
+            border-radius: 0 0 4px 4px;
+        }
+
+        .number-btn:hover {
+            background: #357abd;
+        }
+
+        /* Checkbox and radio styles */
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-item input,
+        .radio-item input {
+            width: auto;
+            margin: 0;
+        }
+
+        /* Meeting times section */
+        .meeting-times {
+            background: rgba(74, 144, 226, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .meeting-time-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 1rem;
+        }
+
+        .add-time-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .add-time-btn:hover {
+            background: #357abd;
+        }
+
+        .remove-time-btn {
+            background: #dc4c64;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+        }
+
+        .remove-time-btn:hover {
+            background: #c53858;
+        }
+
+        /* Button styles */
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4a90e2, #87ceeb);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+        }
+
+        .btn-secondary:hover {
+            background: #4a90e2;
+            color: white;
+        }
+
+        /* Success message */
+        .success-message {
+            display: none;
+            background: linear-gradient(45deg, #45a049, #66bb6a);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .meeting-time-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="#" class="logo" onclick="goHome()">
+            <div class="logo-icon">SG</div>
+            <span>StudyGroups</span>
+        </a>
+        <a href="#" class="back-btn" onclick="goHome()">← Back to Home</a>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="form-container">
+            <h1 class="page-title">Create Study Groupie</h1>
+            <p class="page-subtitle">Fill out the information below to create your new study group</p>
+
+            <div class="success-message" id="successMessage">
+                🎉 Study group created successfully! Redirecting to home...
+            </div>
+
+            <form id="createGroupForm">
+                <!-- Basic Information -->
+                <div class="form-group">
+                    <label for="groupTitle">Groupie Title <span class="required">*</span></label>
+                    <input type="text" id="groupTitle" name="groupTitle" required 
+                           placeholder="e.g., Advanced Calculus Study Group">
+                </div>
+
+                <div class="form-group">
+                    <label for="groupDescription">Description <span class="required">*</span></label>
+                    <textarea id="groupDescription" name="groupDescription" required 
+                              placeholder="Describe what your study group is about, goals, and expectations..."></textarea>
+                </div>
+
+                <!-- Group Settings -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="maxMembers">Maximum Members <span class="required">*</span></label>
+                        <div class="number-input-container">
+                            <input type="number" id="maxMembers" name="maxMembers" 
+                                   min="2" max="50" value="10" required class="number-input">
+                            <div class="number-buttons">
+                                <button type="button" class="number-btn" onclick="adjustNumber('maxMembers', 1)">▲</button>
+                                <button type="button" class="number-btn" onclick="adjustNumber('maxMembers', -1)">▼</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="groupSubject">Subject/Category <span class="required">*</span></label>
+                        <select id="groupSubject" name="groupSubject" required>
+                            <option value="">Select a subject</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="biology">Biology</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="languages">Languages</option>
+                            <option value="literature">Literature</option>
+                            <option value="history">History</option>
+                            <option value="psychology">Psychology</option>
+                            <option value="business">Business</option>
+                            <option value="economics">Economics</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Group Type -->
+                <div class="form-group">
+                    <label>Group Type <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="typePublic" name="groupType" value="public" checked>
+                            <label for="typePublic">Public (Anyone can join)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="typePrivate" name="groupType" value="private">
+                            <label for="typePrivate">Private (Invitation only)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="typeUniversity" name="groupType" value="university">
+                            <label for="typeUniversity">University only</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meeting Information -->
+                <div class="form-group">
+                    <label for="meetingLocation">Primary Meeting Location</label>
+                    <input type="text" id="meetingLocation" name="meetingLocation" 
+                           placeholder="e.g., Library Study Room 204, Online via Zoom, etc.">
+                </div>
+
+                <!-- Meeting Times -->
+                <div class="form-group">
+                    <label>Preferred Meeting Times</label>
+                    <div class="meeting-times" id="meetingTimes">
+                        <div class="meeting-time-row">
+                            <div>
+                                <label for="day1">Day</label>
+                                <select id="day1" name="meetingDay[]">
+                                    <option value="">Select day</option>
+                                    <option value="monday">Monday</option>
+                                    <option value="tuesday">Tuesday</option>
+                                    <option value="wednesday">Wednesday</option>
+                                    <option value="thursday">Thursday</option>
+                                    <option value="friday">Friday</option>
+                                    <option value="saturday">Saturday</option>
+                                    <option value="sunday">Sunday</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="startTime1">Start Time</label>
+                                <input type="time" id="startTime1" name="startTime[]">
+                            </div>
+                            <div>
+                                <label for="endTime1">End Time</label>
+                                <input type="time" id="endTime1" name="endTime[]">
+                            </div>
+                        </div>
+                        <button type="button" class="add-time-btn" onclick="addMeetingTime()">+ Add Another Time</button>
+                    </div>
+                </div>
+
+                <!-- Study Methods -->
+                <div class="form-group">
+                    <label>Study Methods (Select all that apply)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="method1" name="studyMethods[]" value="group-discussion">
+                            <label for="method1">Group Discussion</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="method2" name="studyMethods[]" value="problem-solving">
+                            <label for="method2">Problem Solving</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="method3" name="studyMethods[]" value="flashcards">
+                            <label for="method3">Flashcards/Quiz</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="method4" name="studyMethods[]" value="presentations">
+                            <label for="method4">Presentations</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="method5" name="studyMethods[]" value="note-sharing">
+                            <label for="method5">Note Sharing</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="method6" name="studyMethods[]" value="practice-exams">
+                            <label for="method6">Practice Exams</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-group">
+                    <label for="additionalInfo">Additional Information</label>
+                    <textarea id="additionalInfo" name="additionalInfo" 
+                              placeholder="Any additional requirements, materials needed, or other important information..."></textarea>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactEmail">Contact Email</label>
+                        <input type="email" id="contactEmail" name="contactEmail" 
+                               placeholder="group.contact@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Contact Phone (Optional)</label>
+                        <input type="tel" id="contactPhone" name="contactPhone" 
+                               placeholder="+1 (555) 123-4567">
+                    </div>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="goHome()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Groupie</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let meetingTimeCounter = 1;
+
+        // Adjust number input
+        function adjustNumber(inputId, change) {
+            const input = document.getElementById(inputId);
+            const currentValue = parseInt(input.value) || 0;
+            const newValue = Math.max(parseInt(input.min), Math.min(parseInt(input.max), currentValue + change));
+            input.value = newValue;
+        }
+
+        // Add meeting time row
+        function addMeetingTime() {
+            meetingTimeCounter++;
+            const meetingTimes = document.getElementById('meetingTimes');
+            const addButton = meetingTimes.querySelector('.add-time-btn');
+            
+            const newRow = document.createElement('div');
+            newRow.className = 'meeting-time-row';
+            newRow.innerHTML = `
+                <div>
+                    <label for="day${meetingTimeCounter}">Day</label>
+                    <select id="day${meetingTimeCounter}" name="meetingDay[]">
+                        <option value="">Select day</option>
+                        <option value="monday">Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="saturday">Saturday</option>
+                        <option value="sunday">Sunday</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="startTime${meetingTimeCounter}">Start Time</label>
+                    <input type="time" id="startTime${meetingTimeCounter}" name="startTime[]">
+                </div>
+                <div>
+                    <label for="endTime${meetingTimeCounter}">End Time</label>
+                    <input type="time" id="endTime${meetingTimeCounter}" name="endTime[]">
+                </div>
+                <button type="button" class="remove-time-btn" onclick="removeMeetingTime(this)" title="Remove">×</button>
+            `;
+            
+            meetingTimes.insertBefore(newRow, addButton);
+        }
+
+        // Remove meeting time row
+        function removeMeetingTime(button) {
+            button.closest('.meeting-time-row').remove();
+        }
+
+        // Form submission
+        document.getElementById('createGroupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const groupData = {};
+            
+            // Process form data
+            for (let [key, value] of formData.entries()) {
+                if (groupData[key]) {
+                    // Handle multiple values (arrays)
+                    if (Array.isArray(groupData[key])) {
+                        groupData[key].push(value);
+                    } else {
+                        groupData[key] = [groupData[key], value];
+                    }
+                } else {
+                    groupData[key] = value;
+                }
+            }
+            
+            // Validate required fields
+            if (!groupData.groupTitle || !groupData.groupDescription || !groupData.maxMembers || !groupData.groupSubject || !groupData.groupType) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Log the data (in a real app, this would be sent to the server)
+            console.log('Study Group Data:', groupData);
+            
+            // Simulate redirect after delay
+            setTimeout(() => {
+                alert('Group created successfully! Redirecting to home page...');
+                goHome();
+            }, 2000);
+        });
+
+        // Navigation
+        function goHome() {
+            // In a real application, this would navigate back to the home page
+            window.history.back();
+        }
+
+        // Initialize form
+        window.addEventListener('load', function() {
+            // Set default contact email from user data (if available)
+            // In a real app, this would come from the logged-in user's profile
+            document.getElementById('contactEmail').placeholder = 'your.email@university.edu';
+        });
+    </script>
+</body>
+</html>
